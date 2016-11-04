@@ -10,5 +10,5 @@ install:
   - pip install requests
 
 script:
-  - python -m unittest tests/TestStar.py
-  - python -m unittest tests/TestXray.py
+  - python tests/TestStar.py
+  - python tests/TestXray.py
