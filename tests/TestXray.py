@@ -9,8 +9,6 @@ import unittest
 
 from physdata import xray
 
-from urllib.error import HTTPError
-
 
 class TestXray(unittest.TestCase):
     def test_fetch_coefficients(self):
@@ -27,11 +25,6 @@ class TestXray(unittest.TestCase):
         # Check a compound
         self.assertIsInstance(xray.fetch_coefficients("tissue"), list)
 
-        # Check requesting non existing data raises exceptions
-        with self.assertRaises(HTTPError):
-            xray.fetch_coefficients("mithril")
-        with self.assertRaises(HTTPError):
-            xray.fetch_coefficients(999)
 
     def test_material_lists(self):
         elements = xray.fetch_elements()

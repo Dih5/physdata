@@ -4,8 +4,9 @@
 `X-Ray Mass Attenuation Coefficients <https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients>`_ data.
 
 """
+from __future__ import print_function
 
-import urllib.request
+import requests
 import re
 import sys
 
@@ -114,16 +115,16 @@ def fetch_coefficients(z, density=None):
     """
     if density is None:
         density = 1
+
     if type(z) is int or (type(z) is str and z.isdigit()):  # Either an integer or a string with a natural number
         str_z = str(z) if int(z) > 9 else "0" + str(z)  # Two digit string
         url = "http://physics.nist.gov/PhysRefData/XrayMassCoef/ElemTab/z" + str_z + ".html"
-    elif type(z) is str:
-        url = "http://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/" + z + ".html"
     else:
-        raise TypeError("z must be an integer (elements) or a string (compound)")
+        url = "http://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/" + z + ".html"
 
-    with urllib.request.urlopen(url) as response:
-        html = response.read()
+    r = requests.get(url)
+    # TODO: Check for errors
+    html = r.text
     html = str(html).split("</DIV>")[2]  # Pick the div with the ascii table
     # How numbers are represented in the NIST web.
     number_pattern = '-?[0-9]+\.?[0-9]*E[-+][0-9]+'
@@ -144,10 +145,9 @@ def fetch_elements():
         List[:obj:`ElementData`]: A list with the info of each element available.
 
     """
-    with urllib.request.urlopen("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html") as response:
-        html = str(response.read())
-    table = re.findall(r"<TABLE.*?</TABLE>", html)[0]  # Pick the table in the page
-    rows = re.findall(r"<TR.*?>(.*?)</TR>", table)[3:]  # Pick the rows, excluding the headers
+    r = requests.get("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html")
+    html = r.text
+    rows = re.findall(r"<TR.*?>(.*?)</TR>", html, re.DOTALL)[3:]  # Pick the rows, excluding the headers
     output = []
     for row in rows:
         parsed_row = re.findall(r"<TD.*?>(.*?)</TD>", row)
@@ -169,10 +169,9 @@ def fetch_compounds():
 
     """
     # First relate short names with names from the links in table 4
-    with urllib.request.urlopen("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab4.html") as response:
-        html = str(response.read())
-    table = re.findall(r"<TABLE.*?</TABLE>", html)[0]  # Pick the table in the page
-    cells = re.findall(r"<TD.*?>(.*?)</TD>", table)[4:]  # Pick the cells, excluding the headers
+    r = requests.get("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab4.html")
+    html = r.text
+    cells = re.findall(r"<TD.*?>(.*?)</TD>", html, re.DOTALL)[4:]  # Pick the cells, excluding the headers
     cells = list(filter(lambda s: s != "&nbsp;", map(lambda x: x.strip(), cells)))
     # Now cells are of the form:
     # <A href="ComTab/adipose.html">Adipose Tissue</A> (ICRU-44)
@@ -186,10 +185,9 @@ def fetch_compounds():
         name_dict[data[1] + data[2]] = data[0]
 
     # Now fetch the compound data
-    with urllib.request.urlopen("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab2.html") as response:
-        html = str(response.read())
-    table = re.findall(r"<TABLE.*?</TABLE>", html)[0]  # Pick the table in the page
-    rows = re.findall(r"<TR.*?>(.*?)</TR>", table)[3:]  # Pick the rows, excluding the headers
+    r = requests.get("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab2.html")
+    html = r.text
+    rows = re.findall(r"<TR.*?>(.*?)</TR>", html, re.DOTALL)[3:]  # Pick the rows, excluding the headers
     output = []
     errored = False
     for row in rows:
