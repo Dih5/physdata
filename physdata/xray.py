@@ -1,3 +1,10 @@
+# -*- coding: UTF-8 -*-
+
+"""xray.py: A module to interface the
+`X-Ray Mass Attenuation Coefficients <https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients>`_ data.
+
+"""
+
 import urllib.request
 import re
 import sys

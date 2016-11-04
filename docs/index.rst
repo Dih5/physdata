@@ -15,11 +15,16 @@ Contents:
 xray
 =========================
 
-The module physdata.xray contains an interface to the `X-Ray Mass Attenuation Coefficients <https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients>`_.
 
 .. automodule:: physdata.xray
    :members:
 
+
+star
+=========================
+
+.. automodule:: physdata.star
+:members:
 
 
 Indices and tables

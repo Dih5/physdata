@@ -1,9 +1,8 @@
 # -*- coding: UTF-8 -*-
 
 """star.py: A module to interface the
-`ESTAR <http://physics.nist.gov/PhysRefData/Star/Text/ESTAR.html>`_,
-`PSTAR <http://physics.nist.gov/PhysRefData/Star/Text/PSTAR.html>`_, and
-`ASTAR <http://physics.nist.gov/PhysRefData/Star/Text/ASTAR.html>`_ data.
+`Stopping-Power & Range Tables for Electrons, Protons, and Helium Ions
+<https://www.nist.gov/pml/stopping-power-range-tables-electrons-protons-and-helium-ions>`_.
 
 """
 
@@ -12,18 +11,83 @@ import re
 
 
 def fetch_estar(el_id):
+    """
+    Fetch from the website the data for electrons in a medium.
+
+    Check the `STAR appendix <http://physics.nist.gov/PhysRefData/Star/Text/appendix.html>`_ for further details.
+
+    Args:
+        el_id (int): The positive integer identifying the medium.
+
+    Returns:
+        (list): a list of lists, a list with the data for each tabulated energy value, each a list with:
+
+            * (float): Kinetic energy in MeV.
+            * (float): Collision stopping power in MeV cm^2/g.
+            * (float): Radiative stopping power in MeV cm^2/g.
+            * (float): Total stopping power in MeV cm^2/g.
+            * (float): CSDA range in g/cm^2.
+            * (float): Radiation yield (fraction of kinetic energy converted into bremsstrahlung).
+            * (float): Density effect parameter
+
+    """
     return _fetch_star(el_id, particle="e")
 
 
 def fetch_pstar(el_id):
+    """
+        Fetch from the website the data for protons in a medium.
+
+        Check the `STAR appendix <http://physics.nist.gov/PhysRefData/Star/Text/appendix.html>`_ for further details.
+
+        Args:
+            el_id (int): The positive integer identifying the medium.
+
+        Returns:
+            (list): a list of lists, a list with the data for each tabulated energy value, each a list with:
+
+                * (float): Kinetic energy in MeV.
+                * (float): Electronic stopping power in MeV cm^2/g.
+                * (float): Nuclear stopping power in MeV cm^2/g.
+                * (float): Total stopping power in MeV cm^2/g.
+                * (float): CSDA range in g/cm^2.
+                * (float): Projected CSDA range in g/cm^2.
+                * (float): Detour factor (prjected CSDA / CSDA).
+
+        """
     return _fetch_star(el_id, particle="p")
 
 
 def fetch_astar(el_id):
+    """
+        Fetch from the website the data for alpha particles in a medium.
+
+        Check the `STAR appendix <http://physics.nist.gov/PhysRefData/Star/Text/appendix.html>`_ for further details.
+
+        Args:
+            el_id (int): The positive integer identifying the medium.
+
+        Returns:
+            (list): a list of lists, a list with the data for each tabulated energy value, each a list with:
+
+                * (float): Kinetic energy in MeV.
+                * (float): Electronic stopping power in MeV cm^2/g.
+                * (float): Nuclear stopping power in MeV cm^2/g.
+                * (float): Total stopping power in MeV cm^2/g.
+                * (float): CSDA range in g/cm^2.
+                * (float): Projected CSDA range in g/cm^2.
+                * (float): Detour factor (prjected CSDA / CSDA).
+
+        """
     return _fetch_star(el_id, particle="a")
 
 
 def _fetch_star(el_id, particle="e"):
+    # Note: 3 public functions are offered instead of this one  because the return of estar and pstar/astar is
+    # different.
+
+    # el_id is a 3 character string in the website, so it has to converted.
+    # Despite only int support is documented for el_id, also check for strings.
     if type(el_id) == int:
         z = str(el_id)
     elif (type(el_id) is not str) or not el_id.isdigit():
@@ -51,8 +115,4 @@ def _fetch_star(el_id, particle="e"):
     output = []
     for l in lines:
         output.append(list(map(float,l.split())))
-
     return output
-
-
-print(fetch_astar("13"))
