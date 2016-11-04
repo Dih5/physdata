@@ -55,7 +55,7 @@ setup(
 
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2',  # TODO: Real Python 2 is to be added soon.
         'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
@@ -65,7 +65,7 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords=['X-ray attenuation'],
+    keywords=['X-ray attenuation', 'Stopping power'],
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -79,7 +79,7 @@ setup(
     # your project is installed. For an analysis of "install_requires" vs pip's
     # requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=[],
+    install_requires=['requests', ],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). You can install these using the following syntax,
@@ -88,6 +88,7 @@ setup(
     extras_require={
         'dev': [],
         'test': [],
+        'demos': ["matplotlib", "numpy"],
     },
 
     # If there are data files included in your packages that need to be
