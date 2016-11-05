@@ -14,29 +14,29 @@ class TestXray(unittest.TestCase):
     def test_fetch_coefficients(self):
         # Check types in element data
         data = xray.fetch_coefficients(13)
-        self.assertIs(type(data), list)
+        self.assertTrue(type(data) is list)
         for i in data:
             for j in i:
-                self.assertIs(type(j), float)
+                self.assertTrue(type(j) is float)
         # Check other format of argument
-        self.assertIs(type(xray.fetch_coefficients("13")), list)
-        self.assertIs(type(xray.fetch_coefficients("4")), list)
-        self.assertIs(type(xray.fetch_coefficients(4)), list)
+        self.assertTrue(type(xray.fetch_coefficients("13")) is list)
+        self.assertTrue(type(xray.fetch_coefficients("4")) is list)
+        self.assertTrue(type(xray.fetch_coefficients(4)) is list)
         # Check a compound
-        self.assertIs(type(xray.fetch_coefficients("tissue")), list)
+        self.assertTrue(type(xray.fetch_coefficients("tissue")) is list)
 
 
     def test_material_lists(self):
         elements = xray.fetch_elements()
         # Test a few
-        self.assertIs(type(elements[0].get_coefficients()), list)
-        self.assertIs(type(elements[10].get_coefficients()), list)
-        self.assertIs(type(elements[-1].get_coefficients()), list)
+        self.assertTrue(type(elements[0].get_coefficients()) is list)
+        self.assertTrue(type(elements[10].get_coefficients()) is list)
+        self.assertTrue(type(elements[-1].get_coefficients()) is list)
         compounds = xray.fetch_compounds()
         # Test a few
-        self.assertIs(type(compounds[0].get_coefficients()), list)
-        self.assertIs(type(compounds[10].get_coefficients()), list)
-        self.assertIs(type(compounds[-1].get_coefficients()), list)
+        self.assertTrue(type(compounds[0].get_coefficients()) is list)
+        self.assertTrue(type(compounds[10].get_coefficients()) is list)
+        self.assertTrue(type(compounds[-1].get_coefficients()) is list)
         # Test density functionality
         mu_rho = elements[12].get_coefficients(use_density=False)
         mu = elements[12].get_coefficients(use_density=True)

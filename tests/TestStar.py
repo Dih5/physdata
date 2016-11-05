@@ -14,9 +14,9 @@ class TestStar(unittest.TestCase):
     def test_fetch_star_type(self):
         # Test type of return
         for data in [star.fetch_estar(13), star.fetch_astar(13), star.fetch_pstar(13)]:
-            self.assertIs(type(data), list)
+            self.assertTrue(type(data) is list)
             for i in data[0]:
-                self.assertIs(type(i), float)
+                self.assertTrue(type(i) is float)
 
     def test_fetch_star_input(self):
         # Test formats for argument
