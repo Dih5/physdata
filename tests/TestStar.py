@@ -25,6 +25,23 @@ class TestStar(unittest.TestCase):
             self.assertEqual(f(13), f("13"))
             self.assertEqual(f(101), f("101"))
 
+    def test_fetch_star_density(self):
+        # Test density scaling
+        for f in [star.fetch_estar, star.fetch_astar, star.fetch_pstar]:
+            no_density = f(13)
+            density_2 = f(13, density=2.0)
+            auto_density = f(13, density=True)
+            for x, y, z in zip(no_density, density_2, auto_density):
+                # Energy is not scaled
+                self.assertAlmostEqual(x[0], y[0])
+                self.assertAlmostEqual(x[0], z[0])
+                # Last value is not scaled
+                self.assertAlmostEqual(x[-1], y[-1])
+                self.assertAlmostEqual(x[-1], z[-1])
+                # Stopping power (of a certain kind) is scaled
+                self.assertAlmostEqual(x[1] * 2, y[1])
+                self.assertAlmostEqual(x[1] * 2.6989, z[1])  # The Aluminium density in the website
+
 
 if __name__ == "__main__":
     unittest.main()
