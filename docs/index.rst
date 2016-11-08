@@ -24,7 +24,7 @@ star
 =========================
 
 .. automodule:: physdata.star
-:members:
+   :members:
 
 
 Indices and tables
