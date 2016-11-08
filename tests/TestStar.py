@@ -41,6 +41,9 @@ class TestStar(unittest.TestCase):
                 # Stopping power (of a certain kind) is scaled
                 self.assertAlmostEqual(x[1] * 2, y[1])
                 self.assertAlmostEqual(x[1] * 2.6989, z[1])  # The Aluminium density in the website
+                # Ranges are scaled by the inverse
+                self.assertAlmostEqual(x[4] / 2, y[4])
+                self.assertAlmostEqual(x[4] / 2.6989, z[4])  # The Aluminium density in the website
 
 
 if __name__ == "__main__":

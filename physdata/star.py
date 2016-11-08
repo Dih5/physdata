@@ -130,18 +130,18 @@ def _fetch_star(el_id, particle="e", density=None):
             density = 1.0
     elif type(density) is int:
         density = float(density)
-    elif type(density) is not float:
-        raise ValueError("density must be a float or a bool")
+    elif type(density) is not float or density == 0.0:
+        raise ValueError("density must be a non 0.0 float or a bool")
     output = []
 
     # Find lines with seven numbers ending in <br>
     # In e, all in scientific notation, in a and p the last one is a proper ratio (in (0, 1)).
     if particle == "e":
         lines = re.findall("(" + (number_pattern + "  ") * 6 + number_pattern + ")" + "<br>", html)
-        unit_scale = [1.0, density, density, density, density, 1.0, 1.0]
+        unit_scale = [1.0, density, density, density, 1 / density, 1.0, 1.0]
     else:  # p or a
         lines = re.findall("(" + (number_pattern + "  ") * 6 + "0.[0-9]+" + ")" + "<br>", html)
-        unit_scale = [1.0, density, density, density, density, density, 1]
+        unit_scale = [1.0, density, density, density, 1 / density, 1 / density, 1]
 
     for l in lines:
         l_float = map(float, l.split())
