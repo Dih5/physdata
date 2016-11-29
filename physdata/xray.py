@@ -127,7 +127,7 @@ def fetch_coefficients(z, density=None):
     html = r.text
     html = str(html).split("</DIV>")[2]  # Pick the div with the ascii table
     # How numbers are represented in the NIST web.
-    number_pattern = '-?[0-9]+\.?[0-9]*E[-+][0-9]+'
+    number_pattern = r'-?[0-9]+\.?[0-9]*E[-+][0-9]+'
     lines = re.findall(number_pattern + "  " + number_pattern + "  " + number_pattern, html)
     data = []
     for l in lines:

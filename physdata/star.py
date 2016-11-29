@@ -113,7 +113,7 @@ def _fetch_star(el_id, particle="e", density=None):
         raise TypeError("particle must be a string containing either 'e', 'p' or 'a'.")
     # TODO: Catch unexisting material
     html = r.text
-    number_pattern = '-?[0-9]+\.?[0-9]*E[-+][0-9]+'
+    number_pattern = r'-?[0-9]+\.?[0-9]*E[-+][0-9]+'
 
     if density is None:
         density = 1.0
