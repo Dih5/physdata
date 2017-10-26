@@ -102,15 +102,21 @@ def _fetch_star(el_id, particle="e", density=None):
         z = el_id
     z = z.zfill(3)  # Ensure 3 digits
     if particle == "e":
-        r = requests.post('https://physics.nist.gov/cgi-bin/Star/e_table-t.pl', data={"matno": z, "ShowDefault": "on"})
+        url = 'https://physics.nist.gov/cgi-bin/Star/e_table-t.pl'
+        data = {"matno": z, "ShowDefault": "on"}
     elif particle == "p":
-        r = requests.post('https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
-                          data={"matno": z, "ShowDefault": "on", "prog": "PSTAR"})
+        url = 'https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl'
+        data = {"matno": z, "ShowDefault": "on", "prog": "PSTAR"}
     elif particle == "a":
-        r = requests.post('https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
-                          data={"matno": z, "ShowDefault": "on", "prog": "ASTAR"})
+        url = 'https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl'
+        data = {"matno": z, "ShowDefault": "on", "prog": "ASTAR"}
     else:
         raise TypeError("particle must be a string containing either 'e', 'p' or 'a'.")
+    try:
+        r = requests.post(url, data=data)
+    except requests.SSLERROR:  # If a certificate error occurred, ignore the certificate
+        r = requests.post(url, data=data, verify=False)
+
     # TODO: Catch unexisting material
     html = r.text
     number_pattern = r'-?[0-9]+\.?[0-9]*E[-+][0-9]+'
