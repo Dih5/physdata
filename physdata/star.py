@@ -102,12 +102,12 @@ def _fetch_star(el_id, particle="e", density=None):
         z = el_id
     z = z.zfill(3)  # Ensure 3 digits
     if particle == "e":
-        r = requests.post('http://physics.nist.gov/cgi-bin/Star/e_table-t.pl', data={"matno": z, "ShowDefault": "on"})
+        r = requests.post('https://physics.nist.gov/cgi-bin/Star/e_table-t.pl', data={"matno": z, "ShowDefault": "on"})
     elif particle == "p":
-        r = requests.post('http://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
+        r = requests.post('https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
                           data={"matno": z, "ShowDefault": "on", "prog": "PSTAR"})
     elif particle == "a":
-        r = requests.post('http://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
+        r = requests.post('https://physics.nist.gov/cgi-bin/Star/ap_table-t.pl',
                           data={"matno": z, "ShowDefault": "on", "prog": "ASTAR"})
     else:
         raise TypeError("particle must be a string containing either 'e', 'p' or 'a'.")
