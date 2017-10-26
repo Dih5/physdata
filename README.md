@@ -5,6 +5,7 @@
 
 
 [![Build Status](https://travis-ci.org/Dih5/physdata.svg?branch=master)](https://travis-ci.org/Dih5/physdata)
+[![Documentation Status](https://readthedocs.org/projects/physdata/badge/?version=stable)](http://physdata.readthedocs.io/en/latest/?badge=stable)
 
 
 # physdata
@@ -22,6 +23,8 @@ The package interfaces:
 See it in action:
 ![alt tag](img/DemoAttenuation.png)
 ![alt tag](img/DemoCSDA.png)
+
+The API is documented [here](http://physdata.readthedocs.io/en/latest/index.html#).
 
 
 ## Versioning
