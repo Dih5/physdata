@@ -19,9 +19,16 @@ The package interfaces:
 * [X-Ray Mass Attenuation Coefficients](https://www.nist.gov/pml/x-ray-mass-attenuation-coefficients).
 * [Stopping-Power &amp; Range Tables for Electrons, Protons, and Helium Ions](https://www.nist.gov/pml/stopping-power-range-tables-electrons-protons-and-helium-ions).
 
+See it in action:
+![alt tag](img/DemoAttenuation.png)
+![alt tag](img/DemoCSDA.png)
+
 
 ## Versioning
 
 Releases of this package will be numbered using
 [Semantic Versioning guidelines](http://semver.org/).
 Note the API is unstable while version < 1.0.0.
+
+## Related projects
+I also made a Mathematica implementation of this sort of program. If you are interesented you may check it [here](https://github.com/Dih5/PhysDataFetch).
