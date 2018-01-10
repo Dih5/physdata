@@ -9,7 +9,29 @@ from __future__ import print_function
 import requests
 import re
 import sys
+from copy import deepcopy
 
+
+def _split_borders(data, border_separation=1E-8):
+    # Positions where a border starts
+    new_data = deepcopy(data)
+    repeated = [index for index, values in enumerate(zip(data[:-1], data[1:])) if values[0][0] == values[1][0]]
+    # TODO: Check excess epsilon
+
+    borders_distance = [new_data[i][0] - new_data[i - 1][0] for i in repeated] + [
+        new_data[i + 2][0] - new_data[i + 1][0] for i in repeated]
+    if borders_distance:
+        min_distance = min(borders_distance)
+        if min_distance < border_separation:
+            print("The value of the border-separation parameter is too big. It has automatically been reduced.",
+                  file=sys.stderr)
+            border_separation = min_distance / 2
+
+    for i in repeated:
+        new_data[i][0] -= border_separation
+        new_data[i + 1][0] += border_separation
+
+    return new_data
 
 class ElementData:
     """
@@ -97,13 +119,15 @@ class CompoundData:
             return fetch_coefficients(self.short_name)
 
 
-def fetch_coefficients(z, density=None):
+def fetch_coefficients(z, density=None, border_separation=1E-8):
     """
     Fetch from the website the data for an element or compound.
 
     Args:
         z (int or str): The atomic number (element) or a string representing the compound.
         density (float, optional): If given, the density scaling is removed.
+        border_separation (float): An amount in MeV to split the absorption edges in the data. If the value was so big
+                                   it would overlap another energy interval, it will be reduced with a warning.
 
     Returns:
         List: a list with the data for each tabulated energy value, each a list with:
@@ -134,7 +158,7 @@ def fetch_coefficients(z, density=None):
         l2 = list(map(float, l.split("  ")))
 
         data.append([l2[0], l2[1] * density, l2[2] * density])
-    return data
+    return _split_borders(data, border_separation) if border_separation else data
 
 
 def fetch_elements():
