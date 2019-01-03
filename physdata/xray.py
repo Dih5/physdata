@@ -10,6 +10,7 @@ import requests
 import re
 import sys
 from copy import deepcopy
+import warnings
 
 
 def _split_borders(data, border_separation=1E-8):
@@ -32,6 +33,7 @@ def _split_borders(data, border_separation=1E-8):
         new_data[i + 1][0] += border_separation
 
     return new_data
+
 
 class ElementData:
     """
@@ -147,9 +149,15 @@ def fetch_coefficients(z, density=None, border_separation=1E-8):
         url = "http://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/" + z + ".html"
 
     r = requests.get(url)
-    # TODO: Check for errors
     html = r.text
-    html = str(html).split("</DIV>")[2]  # Pick the div with the ascii table
+    errored = False
+    try:
+        html = str(html).split("</DIV>")[2]  # Pick the div with the ascii table
+
+    except IndexError:
+        errored = True
+    if errored:
+        raise RuntimeError("Could not recognize page structure. Check if page is working:\n%s" % url)
     # How numbers are represented in the NIST web.
     number_pattern = r'-?[0-9]+\.?[0-9]*E[-+][0-9]+'
     lines = re.findall(number_pattern + "  " + number_pattern + "  " + number_pattern, html)
@@ -169,7 +177,8 @@ def fetch_elements():
         List[:obj:`ElementData`]: A list with the info of each element available.
 
     """
-    r = requests.get("http://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html")
+    url = "http://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html"
+    r = requests.get(url)
     html = r.text
     rows = re.findall(r"<TR.*?>(.*?)</TR>", html, re.DOTALL)[3:]  # Pick the rows, excluding the headers
     output = []
@@ -181,6 +190,8 @@ def fetch_elements():
         parsed_row = list(map(lambda x: x.strip(), parsed_row))
         # Dictionary entries by atomic number (as string), symbol and name.
         output.append(ElementData(parsed_row))
+    if not output:
+        warnings.warn("Empty list returned. Is the NIST page working?:\n%s" % url)
     return output
 
 
@@ -232,5 +243,7 @@ def fetch_compounds():
             print("- " + parsed_row[0], file=sys.stderr)
     if errored:
         print("These materials are not available in the list", file=sys.stderr)
-
+    if not output:
+        warnings.warn(
+            "Empty list returned. Is the NIST page working?:\n%s" % "http://physics.nist.gov/PhysRefData/XrayMassCoef/")
     return output

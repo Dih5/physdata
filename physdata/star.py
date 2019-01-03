@@ -9,6 +9,8 @@
 import requests
 import re
 
+import warnings
+
 
 def fetch_estar(el_id, density=None):
     """
@@ -153,4 +155,7 @@ def _fetch_star(el_id, particle="e", density=None):
         l_float = map(float, l.split())
         # Scale with the density the magnitudes that depend on it
         output.append(list(map(lambda a, b: a * b, l_float, unit_scale)))
+
+    if not output:
+        warnings.warn("Empty list returned. Is the NIST page working?:\n%s" % url)
     return output
